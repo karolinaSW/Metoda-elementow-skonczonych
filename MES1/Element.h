@@ -39,6 +39,20 @@ public:
 	double macierzPodcalkowa3[4][4];
 	double macierzPodcalkowa4[4][4];
 
+	double N1(double ksi, double eta);
+	double N2(double ksi, double eta);
+	double N3(double ksi, double eta);
+	double N4(double ksi, double eta);
+
+	double macierzN[4][4];
+	double macierzNN1[4][4];
+	double macierzNN2[4][4];
+	double macierzNN3[4][4];
+	double macierzNN4[4][4];
+
+	double macierzC[4][4];
+
+
 
 
 
@@ -47,6 +61,26 @@ public:
 };
 
 
+
+inline double Element::N1(double ksi, double eta)
+{
+	return 0.25 * (1 - ksi) * (1 - eta);
+}
+
+inline double Element::N2(double ksi, double eta)
+{
+	return 0.25 * (1 + ksi) * (1 - eta);
+}
+
+inline double Element::N3(double ksi, double eta)
+{
+	return 0.25 * (1 + ksi) * (1 + eta);
+}
+
+inline double Element::N4(double ksi, double eta)
+{
+	return 0.25 * (1 - ksi) * (1 + eta);
+}
 
 Element::Element()
 {

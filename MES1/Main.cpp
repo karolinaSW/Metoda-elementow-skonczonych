@@ -1,4 +1,4 @@
-/// Do wprowadzenia nowej danej: 1. dodaj nowa zmienna w klasie Data, 2. dodaj wypisywanie w readData, 3. dodaj zmienna w readData, 
+/// Do wprowadzenia nowej danej: 1. dodaj nowa zmienna w klasie Data, 2. dodaj wypisywanie w readData, 3. dodaj zmienna w readData~~, 
 ///4. dodaj odczyt w readData, 5. dodaj dane w pliku dane.txt
 
 #include "stdafx.h"
@@ -20,7 +20,7 @@ int main()
 {
 	std::cout << "\n\n\nWelcome!\n\n ------------------------ Program FEM ------------------------" << endl << endl;
 
-	Data data(0.3, 0.1, 7, 4, 30.0); //H, L, nH, nL
+	Data data(0.3, 0.1, 7, 4, 30.0, 700.0, 7800.0); //H, L, nH, nL, K, c, ro
 	readData(data);
 	Grid g;
 	g.generateGrid(data);
@@ -99,10 +99,17 @@ void readData(Data &d)
 			file >> nameOfFile >> nameOfFile >> valueDouble;
 			d.K = valueDouble;
 			//d.K = K;
+
+			file >> nameOfFile >> nameOfFile >> valueDouble;
+			d.c = valueDouble;
+			
+			file >> nameOfFile >> nameOfFile >> valueDouble;
+			d.ro = valueDouble;
+			
 			// ------------   -----------   ------------  </>(to modify) reading data   -----------   ----------
 
 			cout << "Got the data: \n\t H = " << d.H << "\n\t L = " << d.L << "\n\t nH = " << d.nH;
-			cout << "\n\t nL = " << d.nL << "\n\t K = " << d.K << endl << endl;
+			cout << "\n\t nL = " << d.nL << "\n\t K = " << d.K << "\n\t c = " << d.c << "\n\t ro = " << d.ro << endl << endl;
 		}
 		else cout << "\nERROR - Can't open the file! :( \n";
 
@@ -112,7 +119,7 @@ void readData(Data &d)
 	{
 		// write parameters (data) here
 		cout << "Got the data: \n\t H = " << d.H << "\n\t L = " << d.L << "\n\t nH = " << d.nH;
-		cout << "\n\t nL = " << d.nL << "\n\t K = " << d.K << endl << endl;
+		cout << "\n\t nL = " << d.nL << "\n\t K = " << d.K << "\n\t c = " << d.c << "\n\t ro = " << d.ro << endl << endl;
 
 		break;
 	}
