@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Node.h"
+#include "Surface.h"
 
 class Element
 {
@@ -8,8 +9,8 @@ public:
 
 	int nodesOfElement[4]; // 4-element array of nodes that make an element; inside are numbers of index of nodes
 
-	double ksi[4]; // wspolrzedne calkowania
-	double eta[4]; // wspolrzedne calkowania
+	double ksi[4]; // wspolrzedne calkowania w objetosci
+	double eta[4]; // wspolrzedne calkowania w objetosci
 	double pochodnePoKsi[4][4];
 	double pochodnePoEta[4][4];
 	double macierzH[4][4];
@@ -51,6 +52,12 @@ public:
 	double macierzNN4[4][4];
 
 	double macierzC[4][4];
+
+	double macierzHWarBrzeg[4][4];
+
+	double macierzHOstateczna[4][4];
+
+	Surface *surface = new Surface[4]; // numered oposite to clock moves, from the bottom
 
 
 

@@ -20,11 +20,10 @@ int main()
 {
 	std::cout << "\n\n\nWelcome!\n\n ------------------------ Program FEM ------------------------" << endl << endl;
 
-	Data data(0.3, 0.1, 7, 4, 30.0, 700.0, 7800.0); //H, L, nH, nL, K, c, ro
+	Data data(0.3, 0.1, 7, 4, 30.0, 700.0, 7800.0, 25.0); //H, L, nH, nL, K, c, ro
 	readData(data);
 	Grid g;
 	g.generateGrid(data);
-	//generateGrid();
 
 
 	system("pause");
@@ -35,16 +34,7 @@ int main()
 
 void readData(Data &d)
 {
-	//Czy da rade oczyscic z tych zmiennych - TAK
-
-	/*
-	double H; // height of the general object (on which I put the grid)
-	double L; // length of the general object
-	int nH; // number of nodes in a row vertically
-	int nL; // number of nodes in a row horizontaly
-	double K; // conductivity
-	*/
-
+	
 	char option;
 	cout << "From where to read data? Choose... \nFile txt  -  1 \t\t Code of the program (from class)  -  2\n ";
 	cin >> option;
@@ -105,11 +95,14 @@ void readData(Data &d)
 			
 			file >> nameOfFile >> nameOfFile >> valueDouble;
 			d.ro = valueDouble;
+
+			file >> nameOfFile >> nameOfFile >> valueDouble;
+			d.alfa = valueDouble;
 			
 			// ------------   -----------   ------------  </>(to modify) reading data   -----------   ----------
 
 			cout << "Got the data: \n\t H = " << d.H << "\n\t L = " << d.L << "\n\t nH = " << d.nH;
-			cout << "\n\t nL = " << d.nL << "\n\t K = " << d.K << "\n\t c = " << d.c << "\n\t ro = " << d.ro << endl << endl;
+			cout << "\n\t nL = " << d.nL << "\n\t K = " << d.K << "\n\t c = " << d.c << "\n\t ro = " << d.ro << "\n\t alfa = " << d.alfa << endl << endl;
 		}
 		else cout << "\nERROR - Can't open the file! :( \n";
 
@@ -119,7 +112,7 @@ void readData(Data &d)
 	{
 		// write parameters (data) here
 		cout << "Got the data: \n\t H = " << d.H << "\n\t L = " << d.L << "\n\t nH = " << d.nH;
-		cout << "\n\t nL = " << d.nL << "\n\t K = " << d.K << "\n\t c = " << d.c << "\n\t ro = " << d.ro << endl << endl;
+		cout << "\n\t nL = " << d.nL << "\n\t K = " << d.K << "\n\t c = " << d.c << "\n\t ro = " << d.ro << "\n\t alfa = " << d.alfa << endl << endl;
 
 		break;
 	}

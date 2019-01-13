@@ -9,13 +9,8 @@ class Grid
 {
 public:
 
-	//int nh; // amount of nodes in grid
-	//int nE; // amount of elements in grid
 	int numberOfElements;
 	int numberOfNodes;
-
-	//Node *arrOfNodes = new Node[numberOfNodes];
-	//Element *arrOfElements = new Element[numberOfElements];
 
 	Node *arrOfNodes;
 	Element *arrOfElements;
@@ -48,6 +43,7 @@ void Grid::generateGrid(Data &d)
 			this->arrOfElements[k].nodesOfElement[1] = k + d.nH + j;
 			this->arrOfElements[k].nodesOfElement[2] = k + d.nH + 1 + j;
 			this->arrOfElements[k].nodesOfElement[3] = k + 1 + j;
+			
 
 			k++;
 		}
@@ -127,8 +123,7 @@ void Grid::generateGrid(Data &d)
 	cout << endl;
 	*/
 
-	cout << endl << endl << endl << " ################################################################";
-	cout << endl << "Calkowanie:" << endl << endl;
+	cout << endl << endl << endl << " ################################################################" << endl;
 	
 
 	//----tutaj test dla danych z zajec:
@@ -334,11 +329,85 @@ void Grid::generateGrid(Data &d)
 					this->arrOfElements[k].macierzC[i][j] = this->arrOfElements[k].macierzNN1[i][j] + this->arrOfElements[k].macierzNN2[i][j] + this->arrOfElements[k].macierzNN3[i][j] + this->arrOfElements[k].macierzNN4[i][j];
 				}
 			}
-
-
 			//----------------------</> Macierz C
 
+			//-----------------------------------------------------plaszczyzny
 
+
+			// nadanie plaszczyznom wezlow i wartosci ksi eta
+			Surface a(this->arrOfNodes[k + j], this->arrOfNodes[k + d.nH + j], -(1/sqrt(3)), (1 / sqrt(3)), -1, -1);
+			this->arrOfElements[k].surface[0] = a;
+			Surface b(this->arrOfNodes[k + d.nH + j], this->arrOfNodes[k + d.nH + 1 + j], 1, 1, -(1 / sqrt(3)), (1 / sqrt(3)));
+			this->arrOfElements[k].surface[1] = b;
+			Surface c(this->arrOfNodes[k + d.nH + 1 + j], this->arrOfNodes[k + 1 + j], (1 / sqrt(3)), -(1 / sqrt(3)), 1, 1);
+			this->arrOfElements[k].surface[2] = c;
+			Surface e(this->arrOfNodes[k + 1 + j], this->arrOfNodes[k + j], -1, -1, (1 / sqrt(3)), -(1 / sqrt(3)));
+			this->arrOfElements[k].surface[3] = e;
+
+
+			//obliczanie macierzy z wartosciami funkcji ksztaltu dla kazdego punktu 
+			for (int j = 0; j < 4; j++)
+			{
+				for (int i = 0; i < 2; i++) // 0123 - nr funkcji ksztaltu, i - punkt calkowania
+				{
+					this->arrOfElements[k].surface[j].macierzN[i][0] = this->arrOfElements[k].N1(this->arrOfElements[k].surface[j].ksi[i], this->arrOfElements[k].surface[j].eta[i]);
+					this->arrOfElements[k].surface[j].macierzN[i][1] = this->arrOfElements[k].N2(this->arrOfElements[k].surface[j].ksi[i], this->arrOfElements[k].surface[j].eta[i]);
+					this->arrOfElements[k].surface[j].macierzN[i][2] = this->arrOfElements[k].N3(this->arrOfElements[k].surface[j].ksi[i], this->arrOfElements[k].surface[j].eta[i]);
+					this->arrOfElements[k].surface[j].macierzN[i][3] = this->arrOfElements[k].N4(this->arrOfElements[k].surface[j].ksi[i], this->arrOfElements[k].surface[j].eta[i]);
+				}
+			}
+
+			for (int j = 0; j < 4; j++)
+			{
+				for (int i = 0; i < 4; i++)
+				{
+					for (int h = 0; h < 4; h++) 
+					{
+						this->arrOfElements[k].surface[j].macierzNN1[i][h] = this->arrOfElements[k].surface[j].macierzN[0][i] * this->arrOfElements[k].surface[j].macierzN[0][h] * d.alfa;
+						this->arrOfElements[k].surface[j].macierzNN2[i][h] = this->arrOfElements[k].surface[j].macierzN[1][i] * this->arrOfElements[k].surface[j].macierzN[1][h] * d.alfa;
+
+					}
+				}
+			}
+
+			for (int j = 0; j < 4; j++)
+			{
+				for (int i = 0; i < 4; i++)
+				{
+					for (int h = 0; h < 4; h++)
+					{
+						this->arrOfElements[k].surface[j].macierzSumNN[i][h] = (this->arrOfElements[k].surface[j].macierzNN1[i][h] + this->arrOfElements[k].surface[j].macierzNN2[i][h]) * this->arrOfElements[k].surface[j].det;
+					}
+				}
+			}
+
+			///--------------------ajajajaja for test only
+			cout << "elem " << k << endl;
+
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{ 
+					this->arrOfElements[k].macierzHWarBrzeg[i][j] = (this->arrOfElements[k].surface[0].isEdge() * this->arrOfElements[k].surface[0].macierzSumNN[i][j]) + (this->arrOfElements[k].surface[1].isEdge()*this->arrOfElements[k].surface[1].macierzSumNN[i][j]) + (this->arrOfElements[k].surface[2].isEdge()*this->arrOfElements[k].surface[2].macierzSumNN[i][j]) + (this->arrOfElements[k].surface[3].isEdge() * this->arrOfElements[k].surface[3].macierzSumNN[i][j]);
+				}
+			}
+
+			// ---------------------^^^^^^^^^^^^^^^^^^^^^^^^------------------ macierz H ostateczna
+
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					this->arrOfElements[k].macierzHOstateczna[i][j] = this->arrOfElements[k].macierzH[i][j] + this->arrOfElements[k].macierzHWarBrzeg[i][j];
+
+					cout << this->arrOfElements[k].macierzHWarBrzeg[i][j] << "\t";
+				}
+				cout << endl;
+			}
+
+
+
+			//--------------------------------------------------</>plaszczyzna
 
 
 
@@ -496,10 +565,52 @@ void Grid::generateGrid(Data &d)
 		}
 
 cout << this->arrOfNodes[this->arrOfElements[6].nodesOfElement[2]].isOnEdge << "uaaaaaaaaaaa" << endl;
+
+cout << "powierzchnie elementu  "<< c << " : " ;
+cout << this->arrOfElements[c].surface[0].isEdge() << "\t";
+cout << this->arrOfElements[c].surface[1].isEdge() << "\t";
+cout << this->arrOfElements[c].surface[2].isEdge() << "\t";
+cout << this->arrOfElements[c].surface[3].isEdge() << "\t";
+
+
+cout << " ...................................................................................\n";
+for (int j = 0; j < 4; j++) {
+	for (int i = 0; i < 2; i++) {
+		cout << this->arrOfElements[c].surface[j].macierzN[i][0] << "\t";
+		cout << this->arrOfElements[c].surface[j].macierzN[i][1] << "\t";
+		cout << this->arrOfElements[c].surface[j].macierzN[i][2] << "\t";
+		cout << this->arrOfElements[c].surface[j].macierzN[i][3] << "\t";
+		cout << endl;
+	}
+}
+
+for (int j = 0; j < 4; j++) {
+for (int i = 0; i < 4; i++) {
+for (int h = 0; h < 4; h++) {
+cout << this->arrOfElements[0].surface[j].macierzNN2[i][h] << "\t";
+}
+cout << endl;
+}
+}
 */
+
+
+
+cout << endl;
 
 		cout << endl;
 	}
+
+
+	for (int j = 0; j < 4; j++) {
+		for (int i = 0; i < 4; i++) {
+			for (int h = 0; h < 4; h++) {
+				cout << this->arrOfElements[0].surface[j].macierzSumNN[i][h] << "\t";
+			}
+			cout << endl;
+		}
+	}
+	
 
 }
 

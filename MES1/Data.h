@@ -10,9 +10,10 @@ public:
 	double  K; // conductivity
 	double c; // pojemnosc cieplna
 	double ro; // density
+	double alfa; //convection alfa
 
 	Data();
-	Data(double H, double L, int nH, int nL, double K, double c, double ro);
+	Data(double H, double L, int nH, int nL, double K, double c, double ro, double alfa);
 	~Data();
 };
 
@@ -27,10 +28,11 @@ Data::Data()
 	this->K = 0;
 	this->c = 0;
 	this->ro = 0;
+	this->alfa = 0;
 }
 
 
-Data::Data(double H, double L, int nH, int nL, double K, double c, double ro) //rozszerzac te dane kiedy trzeba
+Data::Data(double H, double L, int nH, int nL, double K, double c, double ro, double alfa) //rozszerzac te dane kiedy trzeba
 {
 	this->H = H;
 	this->L = L;
@@ -39,6 +41,7 @@ Data::Data(double H, double L, int nH, int nL, double K, double c, double ro) //
 	this->K = K;
 	this->c = c;
 	this->ro = ro;
+	this->alfa = alfa;
 
 }
 
