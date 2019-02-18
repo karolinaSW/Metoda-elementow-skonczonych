@@ -2,6 +2,7 @@
 
 #include "Element.h"
 #include "Data.h"
+#include "Gauss.h"
 
 using namespace std;
 
@@ -14,6 +15,14 @@ public:
 
 	Node *arrOfNodes;
 	Element *arrOfElements;
+
+	double **gH;
+	double **gC;
+	double *gP;
+
+	double **gHC;
+	double *gPC;
+
 
 	void generateGrid(Data &d);
 
@@ -30,6 +39,28 @@ void Grid::generateGrid(Data &d)
 
 	arrOfNodes = new Node[numberOfNodes];
 	arrOfElements = new Element[numberOfElements];
+
+	gH = new double*[numberOfNodes];
+	gC = new double*[numberOfNodes];
+	gP = new double [numberOfNodes];
+	gHC = new double*[numberOfNodes];
+	gPC = new double[numberOfNodes];
+
+
+	for (int i = 0; i < numberOfNodes; i++) {
+		gH[i] = new double[numberOfNodes];
+		gC[i] = new double[numberOfNodes];
+		gHC[i] = new double[numberOfNodes];
+	}
+
+	for (int i = 0; i < numberOfNodes; i++) {
+		for (int j = 0; j < numberOfNodes; j++) {
+			gH[i][j] = 0;
+			gC[i][j] = 0;
+			gHC[i][j] = 0;
+		}
+		gP[i] = 0.0;
+	}
 
 
 	//----------- ta pêtla jedzie po wszystkich elementach siatki
@@ -123,27 +154,30 @@ void Grid::generateGrid(Data &d)
 	cout << endl;
 	*/
 
-	cout << endl << endl << endl << " ################################################################" << endl;
+	//cout << endl << endl << endl << " ################################################################" << endl;
 	
 
 	//----tutaj test dla danych z zajec:
-	this->arrOfNodes[this->arrOfElements[0].nodesOfElement[0]].x = 0.0; //po konkretnym elemencie wyszukujê numery wêz³ów w tym elemencie i dajê je jako index do tablicy ogólmej wêz³ów
-	this->arrOfNodes[this->arrOfElements[0].nodesOfElement[1]].x = 0.025;
-	this->arrOfNodes[this->arrOfElements[0].nodesOfElement[2]].x = 0.025;
-	this->arrOfNodes[this->arrOfElements[0].nodesOfElement[3]].x = 0.0;
+	/*
+	this->arrOfNodes[this->arrOfElements[6].nodesOfElement[0]].x = 0.0; //po konkretnym elemencie wyszukujê numery wêz³ów w tym elemencie i dajê je jako index do tablicy ogólmej wêz³ów
+	this->arrOfNodes[this->arrOfElements[6].nodesOfElement[1]].x = 0.025;
+	this->arrOfNodes[this->arrOfElements[6].nodesOfElement[2]].x = 0.025;
+	this->arrOfNodes[this->arrOfElements[6].nodesOfElement[3]].x = 0.0;
 
-	this->arrOfNodes[this->arrOfElements[0].nodesOfElement[0]].y = 0.0;
-	this->arrOfNodes[this->arrOfElements[0].nodesOfElement[1]].y = 0.0;
-	this->arrOfNodes[this->arrOfElements[0].nodesOfElement[2]].y = 0.025;
-	this->arrOfNodes[this->arrOfElements[0].nodesOfElement[3]].y = 0.025;
+	this->arrOfNodes[this->arrOfElements[6].nodesOfElement[0]].y = 0.0;
+	this->arrOfNodes[this->arrOfElements[6].nodesOfElement[1]].y = 0.0;
+	this->arrOfNodes[this->arrOfElements[6].nodesOfElement[2]].y = 0.025;
+	this->arrOfNodes[this->arrOfElements[6].nodesOfElement[3]].y = 0.025;
+	*/
 	
 	
 	//----------- ta pêtla jedzie po wszystkich elementach siatki
 	k = 0;
-	for (int j = 0; j < (d.nL - 1); j++)
+	for (int l = 0; l < (d.nL - 1); l++)
 	{
-		for (int i = 0; i < (d.nH - 1); i++)
+		for (int m = 0; m < (d.nH - 1); m++)
 		{
+			cout << "element " << k << endl << endl;
 
 			this->arrOfElements[k].eta[0] = -(1 / sqrt(3));
 			this->arrOfElements[k].eta[1] = -(1 / sqrt(3));
@@ -335,13 +369,13 @@ void Grid::generateGrid(Data &d)
 
 
 			// nadanie plaszczyznom wezlow i wartosci ksi eta
-			Surface a(this->arrOfNodes[k + j], this->arrOfNodes[k + d.nH + j], -(1/sqrt(3)), (1 / sqrt(3)), -1, -1);
+			Surface a(this->arrOfNodes[k + l], this->arrOfNodes[k + d.nH + l], -(1/sqrt(3)), (1 / sqrt(3)), -1, -1);
 			this->arrOfElements[k].surface[0] = a;
-			Surface b(this->arrOfNodes[k + d.nH + j], this->arrOfNodes[k + d.nH + 1 + j], 1, 1, -(1 / sqrt(3)), (1 / sqrt(3)));
+			Surface b(this->arrOfNodes[k + d.nH + l], this->arrOfNodes[k + d.nH + 1 + l], 1, 1, -(1 / sqrt(3)), (1 / sqrt(3)));
 			this->arrOfElements[k].surface[1] = b;
-			Surface c(this->arrOfNodes[k + d.nH + 1 + j], this->arrOfNodes[k + 1 + j], (1 / sqrt(3)), -(1 / sqrt(3)), 1, 1);
+			Surface c(this->arrOfNodes[k + d.nH + 1 + l], this->arrOfNodes[k + 1 + l], (1 / sqrt(3)), -(1 / sqrt(3)), 1, 1);
 			this->arrOfElements[k].surface[2] = c;
-			Surface e(this->arrOfNodes[k + 1 + j], this->arrOfNodes[k + j], -1, -1, (1 / sqrt(3)), -(1 / sqrt(3)));
+			Surface e(this->arrOfNodes[k + 1 + l], this->arrOfNodes[k + l], -1, -1, (1 / sqrt(3)), -(1 / sqrt(3)));
 			this->arrOfElements[k].surface[3] = e;
 
 
@@ -382,7 +416,7 @@ void Grid::generateGrid(Data &d)
 			}
 
 			///--------------------ajajajaja for test only
-			cout << "elem " << k << endl;
+			//cout << "elem " << k << endl;
 
 			for (int i = 0; i < 4; i++)
 			{
@@ -398,23 +432,48 @@ void Grid::generateGrid(Data &d)
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					this->arrOfElements[k].macierzHOstateczna[i][j] = this->arrOfElements[k].macierzH[i][j] + this->arrOfElements[k].macierzHWarBrzeg[i][j];
+					this->arrOfElements[k].macierzHOstateczna[i][j] = this->arrOfElements[k].macierzH[i][j] +this->arrOfElements[k].macierzHWarBrzeg[i][j];
 
-					cout << this->arrOfElements[k].macierzHWarBrzeg[i][j] << "\t";
+					//cout << this->arrOfElements[k].macierzHWarBrzeg[i][j] << "\t";
 				}
-				cout << endl;
+				//cout << endl;
 			}
+			/*
+			cout << "N: 00 01.../ 10 11..." << endl;
+			for (int i = 0; i < 4; i++) {
+				cout << this->arrOfElements[k].surface[i].macierzN[0][0] << "  " << this->arrOfElements[k].surface[i].macierzN[0][1] << "   " << this->arrOfElements[k].surface[i].macierzN[0][2] << "   " << this->arrOfElements[k].surface[i].macierzN[0][3] << endl;
+				cout << this->arrOfElements[k].surface[i].macierzN[1][0] << "  " << this->arrOfElements[k].surface[i].macierzN[1][1] << "   " << this->arrOfElements[k].surface[i].macierzN[1][2] << "   " << this->arrOfElements[k].surface[i].macierzN[1][3] << endl;
+				cout << endl;
+			}*/
+
+			for (int i = 0; i < 4; i++) {
+				//cout << this->arrOfElements[k].surface[i].isEdge() << "    ";
+			}
+			cout << endl;
 
 
+			//cout << "peeeeeeeeee kr" << endl << endl;
+			//--------------------------------------------------</>wektor P
+			for (int i = 0; i < 4; i++) 
+			{
+				this->arrOfElements[k].surface[i].wekPKrawedz[0] = - (((this->arrOfElements[k].surface[i].macierzN[0][0] * d.alfa * d.tempAmbient) + (this->arrOfElements[k].surface[i].macierzN[1][0] * d.alfa * d.tempAmbient)) * this->arrOfElements[k].surface[i].det);
+				this->arrOfElements[k].surface[i].wekPKrawedz[1] = - (((this->arrOfElements[k].surface[i].macierzN[0][1] * d.alfa * d.tempAmbient) + (this->arrOfElements[k].surface[i].macierzN[1][1] * d.alfa * d.tempAmbient)) * this->arrOfElements[k].surface[i].det);
+				this->arrOfElements[k].surface[i].wekPKrawedz[2] = - (((this->arrOfElements[k].surface[i].macierzN[0][2] * d.alfa * d.tempAmbient) + (this->arrOfElements[k].surface[i].macierzN[1][2] * d.alfa * d.tempAmbient)) * this->arrOfElements[k].surface[i].det);
+				this->arrOfElements[k].surface[i].wekPKrawedz[3] = - (((this->arrOfElements[k].surface[i].macierzN[0][3] * d.alfa * d.tempAmbient) + (this->arrOfElements[k].surface[i].macierzN[1][3] * d.alfa * d.tempAmbient)) * this->arrOfElements[k].surface[i].det);
 
-			//--------------------------------------------------</>plaszczyzna
+				//cout << this->arrOfElements[k].surface[i].wekPKrawedz[0] << "\t" << this->arrOfElements[k].surface[i].wekPKrawedz[1] << "\t" << this->arrOfElements[k].surface[i].wekPKrawedz[2] << "\t" << this->arrOfElements[k].surface[i].wekPKrawedz[3] << "\t" << endl;
 
+			}
+			//cout << endl << endl << "caly wek P" << endl;
+			for (int i = 0; i < 4; i++) {
+				this->arrOfElements[k].wektorP[i] = ((this->arrOfElements[k].surface[0].wekPKrawedz[i] * this->arrOfElements[k].surface[0].isEdge())+(this->arrOfElements[k].surface[1].wekPKrawedz[i] * this->arrOfElements[k].surface[1].isEdge())+(this->arrOfElements[k].surface[2].wekPKrawedz[i] * this->arrOfElements[k].surface[2].isEdge())+(this->arrOfElements[k].surface[3].wekPKrawedz[i] * this->arrOfElements[k].surface[3].isEdge()));
+				//cout << this->arrOfElements[k].wektorP[i] << "    ";
+			}
+			//cout << endl << endl;
 
+			//------------------------------------------------</> wektor P
 
-
-
-
-
+			
 			k++;// dont touch it!!! iterator elementu
 		}
 	}
@@ -422,11 +481,57 @@ void Grid::generateGrid(Data &d)
 
 
 
+
+
+
+
+
+
+
+
+	//---------------------------------------------------------------------------------------------------------------------------------------
+	//-----------------------------------------------------------     Agregacja     ---------------------------------------------------------
+	//---------------------------------------------------------------------------------------------------------------------------------------
+
+	k = 0;
+	for (int l = 0; l < (d.nL - 1); l++)
+	{
+		for (int m = 0; m < (d.nH - 1); m++)
+		{
+
+
+
+			for (int i = 0; i < 4; i++) {
+				for (int j = 0; j < 4; j++) {
+					this->gH[this->arrOfElements[k].nodesOfElement[i]][this->arrOfElements[k].nodesOfElement[j]] += this->arrOfElements[k].macierzHOstateczna[i][j];
+					this->gC[this->arrOfElements[k].nodesOfElement[i]][this->arrOfElements[k].nodesOfElement[j]] += this->arrOfElements[k].macierzC[i][j];
+
+				}
+				this->gP[this->arrOfElements[k].nodesOfElement[i]] += this->arrOfElements[k].wektorP[i];
+			}
+
+			k++;
+		}
+	}// --------------------------- </> agr
 	
+	cout << "Glob HC : \n\n";
+	for (int i = 0; i < numberOfNodes; i++) {
+		for (int j = 0; j < numberOfNodes; j++) {
+			gHC[i][j] = gH[i][j] + (gC[i][j] / d.stepTime);
+			//cout << gHC[i][j] << "   ";
+		}
+		//cout << endl;
+	}
 
+	double *tc = new double[numberOfNodes];
 
-
-
+	for (int i = 0; i < numberOfNodes; i++) {
+		double sum = 0;
+		for (int j = 0; j < numberOfNodes; j++) {
+			sum += gC[i][j] * 100;    //TODO : here! tempetarure on start
+		}
+		tc[i] = sum;
+	}
 
 
 
@@ -443,7 +548,7 @@ void Grid::generateGrid(Data &d)
 
 	for (int c = 0; c < numberOfElements; c++)
 	{
-		cout << "Element " << c << "**********************************************************************" << endl;
+		//cout << "Element " << c << "**********************************************************************" << endl;
 
 		/*
 		cout << "macierze: dN/d Ksi \t i \t dN/d Eta" << endl;
@@ -567,10 +672,10 @@ void Grid::generateGrid(Data &d)
 cout << this->arrOfNodes[this->arrOfElements[6].nodesOfElement[2]].isOnEdge << "uaaaaaaaaaaa" << endl;
 
 cout << "powierzchnie elementu  "<< c << " : " ;
-cout << this->arrOfElements[c].surface[0].isEdge() << "\t";
-cout << this->arrOfElements[c].surface[1].isEdge() << "\t";
-cout << this->arrOfElements[c].surface[2].isEdge() << "\t";
-cout << this->arrOfElements[c].surface[3].isEdge() << "\t";
+cout << this->arrOfElements[6].surface[0].isEdge() << "\t";
+cout << this->arrOfElements[6].surface[1].isEdge() << "\t";
+cout << this->arrOfElements[6].surface[2].isEdge() << "\t";
+cout << this->arrOfElements[6].surface[3].isEdge() << "\t";
 
 
 cout << " ...................................................................................\n";
@@ -605,12 +710,131 @@ cout << endl;
 	for (int j = 0; j < 4; j++) {
 		for (int i = 0; i < 4; i++) {
 			for (int h = 0; h < 4; h++) {
-				cout << this->arrOfElements[0].surface[j].macierzSumNN[i][h] << "\t";
+				//cout << this->arrOfElements[0].surface[j].macierzSumNN[i][h] << "\t";
 			}
-			cout << endl;
+			//cout << endl;
 		}
 	}
 	
+	for (int i = 0; i < numberOfNodes; i++) {
+		for (int j = 0; j < numberOfNodes; j++) {
+			cout << gH[i][j] << "   ";
+		}
+		cout << endl;
+	}
+
+	cout << endl << endl << endl;
+
+	for (int i = 0; i < numberOfNodes; i++) {
+		for (int j = 0; j < numberOfNodes; j++) {
+			cout << gC[i][j] << "   ";
+		}
+		cout << endl;
+	}
+
+	
+
+
+	cout << endl << endl << endl;
+
+	for (int i = 0; i < numberOfNodes; i++) {
+		gPC[i] = gP[i] - (tc[i] / d.stepTime);
+		cout << gP[i] - (tc[i]/d.stepTime)<< "   ";
+
+	}
+
+	//przerzucenie na drug¹ stronê:
+	for (int i = 0; i < numberOfNodes; i++) {
+		gPC[i] *= (-1.0);
+	}
+
+	double *temperatures = new double[numberOfNodes];
+	Gauss g;
+	temperatures = g.solve(numberOfNodes, gHC, gPC);
+	for (int i = 0; i < numberOfNodes; i++) {
+		this ->arrOfNodes[i].t = temperatures[i];
+	}
+
+
+	cout << endl << endl;
+	for (int i = 0; i < numberOfNodes; i++) {
+		cout << "Temp dla wezla  " << i << ":   " << this->arrOfNodes[i].t << endl;
+	}
+
+	for (int i = 0; i < d.nH; i++) {
+		cout << this->arrOfNodes[d.nH - 1 - i + (d.nH * 0)].t << "\t|   " << this->arrOfNodes[d.nH - 1 - i + (d.nH * 1)].t << "\t|   " << this->arrOfNodes[d.nH - 1 - i + (d.nH * 2)].t << "\t|   " << this->arrOfNodes[d.nH - 1 - i + (d.nH * 3)].t << "\t|   " << endl;
+	}
+
+
+	cout << endl << endl;
+
+	double min = this->arrOfNodes[0].t;
+	double max = this->arrOfNodes[0].t;
+	for (int i = 1; i < numberOfNodes; i++) {
+		if (min > this->arrOfNodes[i].t) {
+			min = this->arrOfNodes[i].t;
+		}
+		if (max < this->arrOfNodes[i].t) {
+			max = this->arrOfNodes[i].t;
+		}
+	}
+
+	cout << "Temp min = " << min << endl << "Temp max = " << max << endl;
+
+
+	for (int j = d.stepTime; j <= d.wholeTime; j+=d.stepTime) {
+
+		cout << "po czasie " << j << " sekund:" << endl << endl;
+
+		temperatures = g.solve(numberOfNodes, gHC, gPC);
+		for (int i = 0; i < numberOfNodes; i++) {
+			this->arrOfNodes[i].t = temperatures[i];
+		}
+
+		for (int i = 0; i < d.nH; i++) {
+				cout << this->arrOfNodes[d.nH - 1 - i + (d.nH * 0)].t << "\t|   " << this->arrOfNodes[d.nH - 1 - i + (d.nH * 1)].t << "\t|   " << this->arrOfNodes[d.nH - 1 - i + (d.nH * 2)].t << "\t|   " << this->arrOfNodes[d.nH - 1 - i + (d.nH * 3)].t << "\t|   " << endl;
+		}
+	
+
+		for (int i = 0; i < numberOfNodes; i++) {
+			double sum = 0;
+			for (int j = 0; j < numberOfNodes; j++) {
+				sum += gC[i][j] * this->arrOfNodes[i].t;
+			}
+			tc[i] = sum;
+		}
+
+		for (int i = 0; i < numberOfNodes; i++) {
+			gPC[i] = - (gP[i] - (tc[i] / d.stepTime));
+		}
+
+		double min = this->arrOfNodes[0].t;
+		double max = this->arrOfNodes[0].t;
+		for (int i = 1; i < numberOfNodes; i++) {
+			if (min > this->arrOfNodes[i].t) {
+				min = this->arrOfNodes[i].t;
+			}
+			if (max < this->arrOfNodes[i].t) {
+				max = this->arrOfNodes[i].t;
+			}
+		}
+
+		cout << "Temp min = " << min << endl << "Temp max = " << max << endl;
+
+		cout << endl << " ================================" << endl;
+
+	}
+
+
+
+
+
+
+
+
+
+
+
 
 }
 

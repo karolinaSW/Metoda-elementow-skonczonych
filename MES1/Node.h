@@ -6,7 +6,7 @@ public:
 	double x;
 	double y;
 	bool isOnEdge;
-	double t = 20; // Celsius degrees
+	double t; // Celsius degrees
 
 	Node();
 	~Node();
@@ -16,6 +16,7 @@ public:
 
 Node::Node()
 {
+	this->t = 100;
 	this->isOnEdge = false;
 }
 

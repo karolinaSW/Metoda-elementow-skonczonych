@@ -59,9 +59,7 @@ public:
 
 	Surface *surface = new Surface[4]; // numered oposite to clock moves, from the bottom
 
-
-
-
+	double wektorP[4];
 
 	Element();
 	~Element();

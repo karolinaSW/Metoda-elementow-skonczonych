@@ -20,7 +20,7 @@ int main()
 {
 	std::cout << "\n\n\nWelcome!\n\n ------------------------ Program FEM ------------------------" << endl << endl;
 
-	Data data(0.3, 0.1, 7, 4, 30.0, 700.0, 7800.0, 25.0); //H, L, nH, nL, K, c, ro
+	Data data(0.1, 0.1, 4, 4, 25.0, 700.0, 7800.0, 300.0, 1200.0, 500.0, 50.0); //H, L, nH, nL, K, c, ro, alfa, tempAmbient, wholeTime, stepTime
 	readData(data);
 	Grid g;
 	g.generateGrid(data);
@@ -98,11 +98,21 @@ void readData(Data &d)
 
 			file >> nameOfFile >> nameOfFile >> valueDouble;
 			d.alfa = valueDouble;
+
+			file >> nameOfFile >> nameOfFile >> valueDouble;
+			d.tempAmbient = valueDouble;
+
+			file >> nameOfFile >> nameOfFile >> valueDouble;
+			d.wholeTime = valueDouble;
+
+			file >> nameOfFile >> nameOfFile >> valueDouble;
+			d.stepTime = valueDouble;
 			
 			// ------------   -----------   ------------  </>(to modify) reading data   -----------   ----------
 
 			cout << "Got the data: \n\t H = " << d.H << "\n\t L = " << d.L << "\n\t nH = " << d.nH;
-			cout << "\n\t nL = " << d.nL << "\n\t K = " << d.K << "\n\t c = " << d.c << "\n\t ro = " << d.ro << "\n\t alfa = " << d.alfa << endl << endl;
+			cout << "\n\t nL = " << d.nL << "\n\t K = " << d.K << "\n\t c = " << d.c << "\n\t ro = " << d.ro << "\n\t alfa = "
+			<< d.alfa << "\n\t tempAmbient = " << d.tempAmbient << "\n\t wholeTime = " << d.wholeTime << "\n\t stepTime = " << d.stepTime << endl << endl;
 		}
 		else cout << "\nERROR - Can't open the file! :( \n";
 
@@ -112,7 +122,8 @@ void readData(Data &d)
 	{
 		// write parameters (data) here
 		cout << "Got the data: \n\t H = " << d.H << "\n\t L = " << d.L << "\n\t nH = " << d.nH;
-		cout << "\n\t nL = " << d.nL << "\n\t K = " << d.K << "\n\t c = " << d.c << "\n\t ro = " << d.ro << "\n\t alfa = " << d.alfa << endl << endl;
+		cout << "\n\t nL = " << d.nL << "\n\t K = " << d.K << "\n\t c = " << d.c << "\n\t ro = " << d.ro << "\n\t alfa = " << d.alfa 
+			<<  "\n\t tempAmbient = " <<  d.tempAmbient << "\n\t wholeTime = " << d.wholeTime << "\n\t stepTime = " << d.stepTime << endl << endl;
 
 		break;
 	}

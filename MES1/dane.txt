@@ -6,3 +6,6 @@ K = 30.0
 c = 700.0
 ro = 7800.0
 alfa = 25.0
+tempAmbient = 1200.0
+wholeTime = 500.0
+stepTime = 50.0

@@ -23,9 +23,16 @@ public:
 
 	bool isEdge();
 
+	double N1(double ksi, double eta);
+	double N2(double ksi, double eta);
+	double N3(double ksi, double eta);
+	double N4(double ksi, double eta);
+
+
 	Surface();
 	Surface(Node &n1, Node &n2, double k1, double k2, double e1, double e2);
 	~Surface();
+	double wekPKrawedz[4];
 
 
 	Surface & operator=(const Surface &s)
@@ -38,6 +45,12 @@ public:
 		this->eta[1] = s.eta[1];
 		this->edgeLength = s.edgeLength;
 		this->det = s.det;
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 4; j++) {
+				this->macierzN[i][j] = s.macierzN[i][j];
+
+			}
+		}
 
 		
 		return *this;
@@ -62,7 +75,7 @@ inline double Surface::dlugoscBoku(double x1, double x2, double y1, double y2)
 
 inline bool Surface::isEdge()
 {
-	if (point1->isOnEdge && point2->isOnEdge)
+	if (this->point1->isOnEdge && this->point2->isOnEdge)
 	{
 		return true;
 	}
@@ -86,6 +99,12 @@ Surface::Surface(Node &n1, Node &n2, double k1, double k2, double e1, double e2)
 	this->eta[1] = e2;
 	this->edgeLength = dlugoscBoku(point1->x, point2->x, point1->y, point2->y);
 	this->det = edgeLength / 2;
+	for (int i = 0; i < 2; i++) {
+		this->macierzN[i][0] = N1(ksi[i], eta[i]);
+		this->macierzN[i][1] = N2(ksi[i], eta[i]);
+		this->macierzN[i][2] = N3(ksi[i], eta[i]);
+		this->macierzN[i][3] = N4(ksi[i], eta[i]);
+	}
 }
 
 
@@ -93,7 +112,7 @@ Surface::~Surface()
 {
 }
 
-/*
+
 inline double Surface::N1(double ksi, double eta)
 {
 	return 0.25 * (1 - ksi) * (1 - eta);
@@ -113,4 +132,3 @@ inline double Surface::N4(double ksi, double eta)
 {
 	return 0.25 * (1 - ksi) * (1 + eta);
 }
-*/

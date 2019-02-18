@@ -11,9 +11,12 @@ public:
 	double c; // pojemnosc cieplna
 	double ro; // density
 	double alfa; //convection alfa
+	double tempAmbient; //temperature in the environment
+	double wholeTime;
+	double stepTime;
 
 	Data();
-	Data(double H, double L, int nH, int nL, double K, double c, double ro, double alfa);
+	Data(double H, double L, int nH, int nL, double K, double c, double ro, double alfa, double tempAmbient, double wholeTime, double stepTime);
 	~Data();
 };
 
@@ -29,10 +32,13 @@ Data::Data()
 	this->c = 0;
 	this->ro = 0;
 	this->alfa = 0;
+	this->tempAmbient = 0;
+	this->wholeTime = 0;
+	this->stepTime = 0;
 }
 
 
-Data::Data(double H, double L, int nH, int nL, double K, double c, double ro, double alfa) //rozszerzac te dane kiedy trzeba
+Data::Data(double H, double L, int nH, int nL, double K, double c, double ro, double alfa, double tempAmbient, double wholeTime, double stepTime) //rozszerzac te dane kiedy trzeba
 {
 	this->H = H;
 	this->L = L;
@@ -42,6 +48,9 @@ Data::Data(double H, double L, int nH, int nL, double K, double c, double ro, do
 	this->c = c;
 	this->ro = ro;
 	this->alfa = alfa;
+	this->tempAmbient = tempAmbient;
+	this->wholeTime = wholeTime;
+	this->stepTime = stepTime;
 
 }
 
