@@ -1,4 +1,1 @@
-﻿  Main.cpp
-d:\studia\v semestr\mes\mes_2_0\metoda-elementow-skonczonych\mes1\grid.h(785): warning C4244: "inicjowanie": konwersja z "double" do "int", możliwa utrata danych
-d:\studia\v semestr\mes\mes_2_0\metoda-elementow-skonczonych\mes1\grid.h(785): warning C4244: "+=": konwersja z "double" do "int", możliwa utrata danych
-  MES1.vcxproj -> D:\STUDIA\V semestr\MES\MES_2_0\Metoda-elementow-skonczonych\Debug\MES1.exe
+﻿  MES1.vcxproj -> D:\STUDIA\V semestr\MES\MES_2_0\Metoda-elementow-skonczonych\Debug\MES1.exe

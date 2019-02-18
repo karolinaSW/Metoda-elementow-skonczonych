@@ -9,8 +9,8 @@ public:
 
 	int nodesOfElement[4]; // 4-element array of nodes that make an element; inside are numbers of index of nodes
 
-	double ksi[4]; // wspolrzedne calkowania w objetosci
-	double eta[4]; // wspolrzedne calkowania w objetosci
+	double ksi[4]; // coordinates of integration in volume
+	double eta[4]; // coordinates of integration in volume
 	double pochodnePoKsi[4][4];
 	double pochodnePoEta[4][4];
 	double macierzH[4][4];

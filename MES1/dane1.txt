@@ -1,0 +1,11 @@
+H = 0.1
+L = 0.1
+nH = 31
+nL = 31
+K = 25
+c = 700
+ro = 7800
+alfa = 300
+tempAmbient = 1200
+wholeTime = 100
+stepTime = 1
