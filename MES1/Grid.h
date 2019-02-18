@@ -799,7 +799,7 @@ cout << endl;
 		for (int i = 0; i < numberOfNodes; i++) {
 			double sum = 0;
 			for (int j = 0; j < numberOfNodes; j++) {
-				sum += gC[i][j] * this->arrOfNodes[i].t;
+				sum += gC[i][j] * this->arrOfNodes[j].t; // HERE CHANGED I TO J!!!!!!!!!!!
 			}
 			tc[i] = sum;
 		}
